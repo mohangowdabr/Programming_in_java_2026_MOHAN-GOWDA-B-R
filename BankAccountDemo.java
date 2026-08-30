@@ -1,81 +1,88 @@
+import java.util.Scanner;
 
-
-class BankAccount {
-    String accountHolderName;
-    long accountNumber;
-    String accountType;
-    double accountBalance;
-
-    BankAccount(String name, long accNo, String type, double balance) {
-        accountHolderName = name;
-        accountNumber = accNo;
-        accountType = type;
-        accountBalance = balance;
+class Account {
+    String name;
+    long accNo;
+    String type;
+    double balance;
+    
+    Account(String name, long accNo, String type, double balance) {
+        this.name = name;
+        this.accNo = accNo;
+        this.type = type;
+        this.balance = balance;
     }
-
     
     void deposit(double amount) {
         if (amount > 0) {
-            accountBalance = accountBalance + amount;
-            System.out.println("Amount deposited: " + amount);
+            balance = balance + amount;
+            System.out.println("Deposit successful. New balance: " + balance);
         } else {
-            System.out.println("Invalid deposit amount: " + amount);
+            System.out.println("Invalid amount");
         }
     }
-
     
     void withdraw(double amount) {
         if (amount <= 0) {
-            System.out.println("Invalid withdrawal amount: " + amount);
-        } else if (amount > accountBalance) {
+            System.out.println("Invalid amount");
+        } else if (amount > balance) {
             System.out.println("Insufficient Balance");
         } else {
-            accountBalance = accountBalance - amount;
-            System.out.println("Amount withdrawn: " + amount);
+            balance = balance - amount;
+            System.out.println("Withdrawal successful. New balance: " + balance);
         }
     }
-
-
+    
     void balanceEnquiry() {
-        System.out.println("Account Holder: " + accountHolderName);
-        System.out.println("Account Number: " + accountNumber);
-        System.out.println("Account Type: " + accountType);
-        System.out.println("Current Balance: " + accountBalance);
+        System.out.println("Account Holder: " + name);
+        System.out.println("Account Number: " + accNo);
+        System.out.println("Account Type: " + type);
+        System.out.println("Current Balance: " + balance);
     }
 }
 
 public class BankAccountDemo {
     public static void main(String[] args) {
-
-        BankAccount account1 = new BankAccount("mohan", 1001, "Savings", 10000);
-        account1.balanceEnquiry();
-
-        System.out.println();
-        account1.deposit(5000);
-
-        System.out.println();
-        account1.withdraw(3000);
-
-        System.out.println();
-        BankAccount account2 = new BankAccount("sir", 1002, "Savings", 12000);
-        account2.withdraw(12000);
-        account2.balanceEnquiry();
-
-        System.out.println();
-        BankAccount account3 = new BankAccount("mam", 1003, "Savings", 10000);
-        account3.withdraw(15000);
-
-        System.out.println();
-        account1.balanceEnquiry();
-
-        System.out.println();
-        account1.deposit(0);
-
-        System.out.println();
-        account1.deposit(-500);
-
-        System.out.println();
-        account1.withdraw(0);
-
+        Scanner sc = new Scanner(System.in);
+        
+        Account account = new Account("Ravi", 1001, "Savings", 10000);
+        
+        boolean running = true;
+        while (running) {
+            System.out.println("\n--- MENU ---");
+            System.out.println("1. Deposit");
+            System.out.println("2. Withdraw");
+            System.out.println("3. Balance Enquiry");
+            System.out.println("4. Exit");
+            System.out.print("Enter choice: ");
+            int choice = sc.nextInt();
+            
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter amount to deposit: ");
+                    double depositAmt = sc.nextDouble();
+                    account.deposit(depositAmt);
+                    break;
+                    
+                case 2:
+                    System.out.print("Enter amount to withdraw: ");
+                    double withdrawAmt = sc.nextDouble();
+                    account.withdraw(withdrawAmt);
+                    break;
+                    
+                case 3:
+                    account.balanceEnquiry();
+                    break;
+                    
+                case 4:
+                    running = false;
+                    System.out.println("Thank you!");
+                    break;
+                    
+                default:
+                    System.out.println("Invalid choice");
+            }
+        }
+        sc.close();
     }
 }
