@@ -1,11 +1,12 @@
+import java.util.Scanner;
 
-
+// Super class
 class Student {
-    String studentId;
+    int studentId;
     String studentName;
     String department;
 
-    Student(String studentId, String studentName, String department) {
+    Student(int studentId, String studentName, String department) {
         this.studentId = studentId;
         this.studentName = studentName;
         this.department = department;
@@ -13,93 +14,92 @@ class Student {
 
     void displayStudentDetails() {
         System.out.println("Student ID   : " + studentId);
-        System.out.println("Student Name : " + (studentName.isEmpty() ? "(empty)" : studentName));
+        System.out.println("Student Name : " + studentName);
         System.out.println("Department   : " + department);
     }
 }
 
-// Sub class that extends Student
+// Sub class 1
 class UndergraduateStudent extends Student {
     int semester;
     double cgpa;
 
-    UndergraduateStudent(String studentId, String studentName, String department,
-                          int semester, double cgpa) {
+    UndergraduateStudent(int studentId, String studentName, String department, int semester, double cgpa) {
         super(studentId, studentName, department);
         this.semester = semester;
         this.cgpa = cgpa;
     }
 
-    // Displays undergraduate-specific information
     void displayUGDetails() {
-        System.out.println("Semester     : " + semester
-                + (semester < 1 || semester > 8 ? "  (out of valid range 1-8)" : ""));
-        System.out.println("CGPA         : " + cgpa
-                + (cgpa < 0 || cgpa > 10 ? "  (out of valid range 0-10)" : ""));
+        System.out.println("Semester     : " + semester);
+        System.out.println("CGPA         : " + cgpa);
     }
 }
 
-// Sub class that extends Student
+// Sub class 2
 class PostgraduateStudent extends Student {
     String specialization;
     String researchTopic;
 
-    PostgraduateStudent(String studentId, String studentName, String department,
-                         String specialization, String researchTopic) {
+    PostgraduateStudent(int studentId, String studentName, String department, String specialization, String researchTopic) {
         super(studentId, studentName, department);
         this.specialization = specialization;
         this.researchTopic = researchTopic;
     }
 
-    // Displays postgraduate-specific information
     void displayPGDetails() {
         System.out.println("Specialization : " + specialization);
-        System.out.println("Research Topic : " + (researchTopic.isEmpty() ? "(empty)" : researchTopic));
+        System.out.println("Research Topic : " + researchTopic);
     }
 }
 
-public class StudentDemo {
+// Main class
+public class StudentInheritanceSimple {
     public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
 
-        UndergraduateStudent ug1 = new UndergraduateStudent("101", "Ravi", "CSE", 5, 8.75);
-        ug1.displayStudentDetails();
-        ug1.displayUGDetails();
+        // ---- Undergraduate Student ----
+        System.out.println("Enter Undergraduate Student details:");
+        System.out.print("Student ID: ");
+        int ugId = sc.nextInt();
+        sc.nextLine();
+        System.out.print("Student Name: ");
+        String ugName = sc.nextLine();
+        System.out.print("Department: ");
+        String ugDept = sc.nextLine();
+        System.out.print("Semester: ");
+        int semester = sc.nextInt();
+        System.out.print("CGPA: ");
+        double cgpa = sc.nextDouble();
 
-        System.out.println();
-        PostgraduateStudent pg1 = new PostgraduateStudent("201", "Anita", "ECE", "AI", "Computer Vision");
-        pg1.displayStudentDetails();
-        pg1.displayPGDetails();
+        UndergraduateStudent ug = new UndergraduateStudent(ugId, ugName, ugDept, semester, cgpa);
 
-        System.out.println();
-        UndergraduateStudent ug2 = new UndergraduateStudent("102", "Kiran", "ISE", 3, 7.5);
-        ug2.displayStudentDetails();
+        System.out.println("\n--- Undergraduate Student Details ---");
+        ug.displayStudentDetails();
+        ug.displayUGDetails();
 
-        System.out.println();
-        UndergraduateStudent ug3 = new UndergraduateStudent("103", "Sneha", "CSE", 7, 9.10);
-        ug3.displayUGDetails();
+        sc.nextLine(); // clear buffer
 
-        System.out.println();
-        PostgraduateStudent pg2 = new PostgraduateStudent("202", "Rahul", "CSE", "Data Science", "NLP");
-        pg2.displayPGDetails();
+        // ---- Postgraduate Student ----
+        System.out.println("\nEnter Postgraduate Student details:");
+        System.out.print("Student ID: ");
+        int pgId = sc.nextInt();
+        sc.nextLine();
+        System.out.print("Student Name: ");
+        String pgName = sc.nextLine();
+        System.out.print("Department: ");
+        String pgDept = sc.nextLine();
+        System.out.print("Specialization: ");
+        String specialization = sc.nextLine();
+        System.out.print("Research Topic: ");
+        String researchTopic = sc.nextLine();
 
-        System.out.println();
-        UndergraduateStudent ug4 = new UndergraduateStudent("-10", "Test", "CSE", 4, 8.0);
-        ug4.displayStudentDetails();
+        PostgraduateStudent pg = new PostgraduateStudent(pgId, pgName, pgDept, specialization, researchTopic);
 
-        System.out.println();
-        UndergraduateStudent ug5 = new UndergraduateStudent("104", "", "CSE", 4, 8.0);
-        ug5.displayStudentDetails();
+        System.out.println("\n--- Postgraduate Student Details ---");
+        pg.displayStudentDetails();
+        pg.displayPGDetails();
 
-        System.out.println();
-        UndergraduateStudent ug6 = new UndergraduateStudent("105", "Divya", "CSE", 10, 8.0);
-        ug6.displayUGDetails();
-
-        System.out.println();
-        UndergraduateStudent ug7 = new UndergraduateStudent("106", "Arjun", "CSE", 5, 11.5);
-        ug7.displayUGDetails();
-
-        System.out.println();
-        PostgraduateStudent pg3 = new PostgraduateStudent("203", "Neha", "ECE", "VLSI", "");
-        pg3.displayPGDetails();
+        sc.close();
     }
 }
