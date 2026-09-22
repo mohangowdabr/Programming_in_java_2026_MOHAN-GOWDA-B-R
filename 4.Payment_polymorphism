@@ -1,47 +1,89 @@
 import java.util.Scanner;
 
-// Super class
+// Super Class
 class Payment {
-    // Overloaded method 1 - compile-time polymorphism
+
+    // Method Overloading - 1
     void makePayment(double amount) {
-        System.out.println("Processing payment of ₹" + amount);
+        if (amount < 0) {
+            System.out.println("Invalid payment amount.");
+        } else if (amount == 0) {
+            System.out.println("Payment amount cannot be zero.");
+        } else {
+            System.out.println("Processing payment of ₹" + amount);
+        }
     }
 
-    // Overloaded method 2 - compile-time polymorphism
+    // Method Overloading - 2
     void makePayment(double amount, String transactionId) {
-        System.out.println("Processing payment of ₹" + amount + " with Transaction ID: " + transactionId);
+        if (amount < 0) {
+            System.out.println("Invalid payment amount.");
+        } else if (amount == 0) {
+            System.out.println("Payment amount cannot be zero.");
+        } else if (transactionId == null || transactionId.isEmpty()) {
+            System.out.println("Invalid Transaction ID.");
+        } else if (!transactionId.startsWith("TXN")) {
+            System.out.println("Invalid Transaction ID format.");
+        } else {
+            System.out.println("Processing payment of ₹" + amount
+                    + " with Transaction ID: " + transactionId);
+        }
     }
 }
 
-// Sub class 1
+// Sub Class 1
 class CreditCardPayment extends Payment {
+
     @Override
     void makePayment(double amount) {
-        System.out.println("₹" + amount + " paid using Credit Card.");
+        if (amount < 0) {
+            System.out.println("Invalid payment amount.");
+        } else if (amount == 0) {
+            System.out.println("Payment amount cannot be zero.");
+        } else {
+            System.out.println("₹" + amount + " paid using Credit Card.");
+        }
     }
 }
 
-// Sub class 2
+// Sub Class 2
 class UPIPayment extends Payment {
+
     @Override
     void makePayment(double amount) {
-        System.out.println("₹" + amount + " paid using UPI.");
+        if (amount < 0) {
+            System.out.println("Invalid payment amount.");
+        } else if (amount == 0) {
+            System.out.println("Payment amount cannot be zero.");
+        } else {
+            System.out.println("₹" + amount + " paid using UPI.");
+        }
     }
 }
 
-// Sub class 3
+// Sub Class 3
 class NetBankingPayment extends Payment {
+
     @Override
     void makePayment(double amount) {
-        System.out.println("₹" + amount + " paid using Net Banking.");
+        if (amount < 0) {
+            System.out.println("Invalid payment amount.");
+        } else if (amount == 0) {
+            System.out.println("Payment amount cannot be zero.");
+        } else {
+            System.out.println("₹" + amount + " paid using Net Banking.");
+        }
     }
 }
 
-// Main class
+// Main Class
 public class PaymentPolymorphismDemo {
+
     public static void main(String[] args) {
+
         Scanner sc = new Scanner(System.in);
 
+        // Input
         System.out.print("Enter Credit Card payment amount: ");
         double ccAmount = sc.nextDouble();
 
@@ -50,18 +92,20 @@ public class PaymentPolymorphismDemo {
 
         System.out.print("Enter Net Banking payment amount: ");
         double nbAmount = sc.nextDouble();
-        sc.nextLine();
 
         System.out.print("Enter amount for overloaded payment: ");
-        double amount2 = sc.nextDouble();
+        double amount = sc.nextDouble();
         sc.nextLine();
+
         System.out.print("Enter Transaction ID: ");
-        String txnId = sc.nextLine();
+        String transactionId = sc.nextLine();
 
         // Parent class reference
         Payment payment;
 
-        System.out.println("\n--- Runtime Polymorphism (Method Overriding) ---");
+        // Runtime Polymorphism
+        System.out.println("\n--- Runtime Polymorphism ---");
+
         payment = new CreditCardPayment();
         payment.makePayment(ccAmount);
 
@@ -71,9 +115,22 @@ public class PaymentPolymorphismDemo {
         payment = new NetBankingPayment();
         payment.makePayment(nbAmount);
 
-        System.out.println("\n--- Compile-Time Polymorphism (Method Overloading) ---");
+        // Compile-Time Polymorphism
+        System.out.println("\n--- Compile-Time Polymorphism ---");
+
         Payment basicPayment = new Payment();
-        basicPayment.makePayment(amount2, txnId);
+        basicPayment.makePayment(amount, transactionId);
+
+        // Null object test
+        System.out.println("\n--- Null Payment Object Test ---");
+
+        payment = null;
+
+        if (payment == null) {
+            System.out.println("Payment object is null.");
+        } else {
+            payment.makePayment(1000);
+        }
 
         sc.close();
     }
