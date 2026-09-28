@@ -18,7 +18,7 @@ class TicketBooking {
     }
 }
 
-// Thread class
+// Creating thread by extending Thread
 class BookingThread extends Thread {
     TicketBooking booking;
 
@@ -31,7 +31,7 @@ class BookingThread extends Thread {
     }
 }
 
-// Runnable class
+// Creating thread using Runnable
 class BookingRunnable implements Runnable {
     TicketBooking booking;
 
@@ -47,33 +47,42 @@ class BookingRunnable implements Runnable {
 // Main class
 public class Main {
     public static void main(String[] args) {
+
         Scanner sc = new Scanner(System.in);
 
         System.out.print("Enter number of passengers: ");
         int n = sc.nextInt();
         sc.nextLine();
 
+        TicketBooking[] bookings = new TicketBooking[n];
         Thread[] threads = new Thread[n];
 
+        // Take all inputs first
         for (int i = 0; i < n; i++) {
             System.out.print("Enter passenger name " + (i + 1) + ": ");
             String name = sc.nextLine();
 
-            TicketBooking booking = new TicketBooking(name);
+            bookings[i] = new TicketBooking(name);
+        }
+
+        System.out.println("\n--- Booking Details ---");
+
+        // Create threads after taking all input
+        for (int i = 0; i < n; i++) {
 
             if (i % 2 == 0) {
                 // Using Thread class
-                threads[i] = new BookingThread(booking);
+                threads[i] = new BookingThread(bookings[i]);
             } else {
                 // Using Runnable interface
-                BookingRunnable runnable = new BookingRunnable(booking);
+                BookingRunnable runnable = new BookingRunnable(bookings[i]);
                 threads[i] = new Thread(runnable);
             }
 
             threads[i].start();
         }
 
-        // Wait for all threads to finish
+        // Wait for all threads
         for (int i = 0; i < n; i++) {
             try {
                 threads[i].join();
