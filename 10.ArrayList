@@ -1,1 +1,121 @@
-
+import java.util.ArrayList;
+import java.util.Scanner;
+class Student {
+ int id;
+ String name;
+ String department;
+ int semester;
+ Student(int id, String name, String department, int semester) {
+ this.id = id;
+ this.name = name;
+ this.department = department;
+ this.semester = semester;
+ }
+ void display() {
+ System.out.println("ID: " + id);
+ System.out.println("Name: " + name);
+ System.out.println("Department: " + department);
+ System.out.println("Semester: " + semester);
+ System.out.println("--------------------");
+ }
+}
+public class Main {
+ public static void main(String[] args) {
+ Scanner sc = new Scanner(System.in);
+ ArrayList<Student> students = new ArrayList<>();
+ int choice;
+ do {
+ System.out.println("\n1. Add Student");
+ System.out.println("2. Remove Student");
+ System.out.println("3. Search by ID");
+ System.out.println("4. Search by Name");
+ System.out.println("5. Display All Students");
+ System.out.println("6. Exit");
+ System.out.print("Enter your choice: ");
+ choice = sc.nextInt();
+ sc.nextLine();
+ if (choice == 1) {
+ System.out.print("Enter student ID: ");
+ int id = sc.nextInt();
+ sc.nextLine();
+ boolean found = false;
+ for (Student s : students) {
+ if (s.id == id) {
+ found = true;
+ break;
+ }
+ }
+ if (found) {
+ System.out.println("Student ID already exists.");
+ } else {
+ System.out.print("Enter student name: ");
+ String name = sc.nextLine();
+ System.out.print("Enter department: ");
+ String department = sc.nextLine();
+ System.out.print("Enter semester: ");
+ int semester = sc.nextInt();
+ sc.nextLine();
+ students.add(new Student(id, name, department, semester));
+ System.out.println("Student added successfully.");
+ }
+ } else if (choice == 2) {
+ System.out.print("Enter student ID to remove: ");
+ int id = sc.nextInt();
+ sc.nextLine();
+ boolean found = false;
+ for (int i = 0; i < students.size(); i++) {
+ if (students.get(i).id == id) {
+ students.remove(i);
+ found = true;
+ System.out.println("Student removed successfully.");
+ break;
+ }
+ }
+ if (!found) {
+ System.out.println("Student not found.");
+ }
+ } else if (choice == 3) {
+ System.out.print("Enter student ID to search: ");
+ int id = sc.nextInt();
+ sc.nextLine();
+ boolean found = false;
+ for (Student s : students) {
+ if (s.id == id) {
+ s.display();
+ found = true;
+ break;
+ }
+ }
+ if (!found) {
+ System.out.println("Student not found.");
+ }
+ } else if (choice == 4) {
+ System.out.print("Enter student name to search: ");
+ String name = sc.nextLine();
+ boolean found = false;
+ for (Student s : students) {
+ if (s.name.equalsIgnoreCase(name)) {
+ s.display();
+ found = true;
+ }
+ }
+ if (!found) {
+ System.out.println("Student not found.");
+ }
+ } else if (choice == 5) {
+ if (students.isEmpty()) {
+ System.out.println("No student records available.");
+ } else {
+ for (Student s : students) {
+ s.display();
+ }
+ }
+ } else if (choice == 6) {
+ System.out.println("Exiting program.");
+ } else {
+ System.out.println("Invalid choice.");
+ }
+ } while (choice != 6);
+ sc.close();
+ }
+}
