@@ -1,1 +1,244 @@
 
+import java.sql.*;
+import java.util.Scanner;
+
+public class HospitalManagementSystem {
+
+    static final String URL =
+            "jdbc:mysql://localhost:3306/HospitalDB";
+    static final String USER = "root";
+    static final String PASSWORD = "your_password";
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection con =
+                    DriverManager.getConnection(URL, USER, PASSWORD);
+
+            Statement st = con.createStatement();
+
+            st.executeUpdate(
+                "CREATE TABLE IF NOT EXISTS Patient (" +
+                "id INT PRIMARY KEY, " +
+                "name VARCHAR(100), " +
+                "age INT, " +
+                "gender VARCHAR(20), " +
+                "disease VARCHAR(100), " +
+                "contact VARCHAR(20))"
+            );
+
+            int choice = 0;
+
+            do {
+                System.out.println("\n===== HOSPITAL MANAGEMENT SYSTEM =====");
+                System.out.println("1. Insert Patient Record");
+                System.out.println("2. Update Patient Record");
+                System.out.println("3. Delete Patient Record");
+                System.out.println("4. Display Patient Records");
+                System.out.println("5. Exit");
+                System.out.print("Enter your choice: ");
+
+                try {
+                    choice = Integer.parseInt(sc.nextLine());
+
+                    switch (choice) {
+
+                        case 1:
+                            System.out.print("Enter Patient ID: ");
+                            int id = Integer.parseInt(sc.nextLine());
+
+                            System.out.print("Enter Patient Name: ");
+                            String name = sc.nextLine().trim();
+
+                            System.out.print("Enter Age: ");
+                            int age = Integer.parseInt(sc.nextLine());
+
+                            System.out.print("Enter Gender: ");
+                            String gender = sc.nextLine().trim();
+
+                            System.out.print("Enter Disease: ");
+                            String disease = sc.nextLine().trim();
+
+                            System.out.print("Enter Contact Number: ");
+                            String contact = sc.nextLine().trim();
+
+                            if (id <= 0 || age <= 0 ||
+                                    name.isEmpty() || gender.isEmpty()
+                                    || disease.isEmpty() || contact.isEmpty()) {
+                                System.out.println(
+                                    "Invalid patient details.");
+                                break;
+                            }
+
+                            String insert =
+                                "INSERT INTO Patient VALUES (?, ?, ?, ?, ?, ?)";
+
+                            try (PreparedStatement ps =
+                                         con.prepareStatement(insert)) {
+
+                                ps.setInt(1, id);
+                                ps.setString(2, name);
+                                ps.setInt(3, age);
+                                ps.setString(4, gender);
+                                ps.setString(5, disease);
+                                ps.setString(6, contact);
+
+                                ps.executeUpdate();
+
+                                System.out.println(
+                                    "Patient record inserted successfully.");
+                            }
+                            break;
+
+                        case 2:
+                            System.out.print("Enter Patient ID to update: ");
+                            int updateId =
+                                    Integer.parseInt(sc.nextLine());
+
+                            System.out.print("Enter new Patient Name: ");
+                            String newName = sc.nextLine().trim();
+
+                            System.out.print("Enter new Age: ");
+                            int newAge = Integer.parseInt(sc.nextLine());
+
+                            System.out.print("Enter new Gender: ");
+                            String newGender = sc.nextLine().trim();
+
+                            System.out.print("Enter new Disease: ");
+                            String newDisease = sc.nextLine().trim();
+
+                            System.out.print("Enter new Contact Number: ");
+                            String newContact = sc.nextLine().trim();
+
+                            if (newAge <= 0 || newName.isEmpty()
+                                    || newGender.isEmpty()
+                                    || newDisease.isEmpty()
+                                    || newContact.isEmpty()) {
+                                System.out.println(
+                                    "Invalid patient details.");
+                                break;
+                            }
+
+                            String update =
+                                "UPDATE Patient SET name=?, age=?, gender=?, " +
+                                "disease=?, contact=? WHERE id=?";
+
+                            try (PreparedStatement ps =
+                                         con.prepareStatement(update)) {
+
+                                ps.setString(1, newName);
+                                ps.setInt(2, newAge);
+                                ps.setString(3, newGender);
+                                ps.setString(4, newDisease);
+                                ps.setString(5, newContact);
+                                ps.setInt(6, updateId);
+
+                                int rows = ps.executeUpdate();
+
+                                if (rows > 0) {
+                                    System.out.println(
+                                        "Patient record updated successfully.");
+                                } else {
+                                    System.out.println(
+                                        "Patient record not found.");
+                                }
+                            }
+                            break;
+
+                        case 3:
+                            System.out.print("Enter Patient ID to delete: ");
+                            int deleteId =
+                                    Integer.parseInt(sc.nextLine());
+
+                            String delete =
+                                "DELETE FROM Patient WHERE id=?";
+
+                            try (PreparedStatement ps =
+                                         con.prepareStatement(delete)) {
+
+                                ps.setInt(1, deleteId);
+
+                                int rows = ps.executeUpdate();
+
+                                if (rows > 0) {
+                                    System.out.println(
+                                        "Patient record deleted successfully.");
+                                } else {
+                                    System.out.println(
+                                        "Patient record not found.");
+                                }
+                            }
+                            break;
+
+                        case 4:
+                            String query = "SELECT * FROM Patient";
+
+                            try (ResultSet rs =
+                                         st.executeQuery(query)) {
+
+                                if (!rs.isBeforeFirst()) {
+                                    System.out.println(
+                                        "No patient records found.");
+                                } else {
+                                    System.out.println(
+                                        "\n===== PATIENT RECORDS =====");
+
+                                    while (rs.next()) {
+                                        System.out.println(
+                                            "Patient ID: " + rs.getInt("id"));
+                                        System.out.println(
+                                            "Name: " + rs.getString("name"));
+                                        System.out.println(
+                                            "Age: " + rs.getInt("age"));
+                                        System.out.println(
+                                            "Gender: " + rs.getString("gender"));
+                                        System.out.println(
+                                            "Disease: " + rs.getString("disease"));
+                                        System.out.println(
+                                            "Contact: " + rs.getString("contact"));
+                                        System.out.println("-------------------------");
+                                    }
+                                }
+                            }
+                            break;
+
+                        case 5:
+                            System.out.println(
+                                "Exiting Hospital Management System.");
+                            break;
+
+                        default:
+                            System.out.println(
+                                "Invalid choice. Please select a valid option.");
+                    }
+
+                } catch (NumberFormatException e) {
+                    System.out.println(
+                        "Invalid input. Please enter a valid number.");
+                } catch (SQLIntegrityConstraintViolationException e) {
+                    System.out.println(
+                        "Patient ID already exists.");
+                } catch (SQLException e) {
+                    System.out.println(
+                        "Database operation failed: " + e.getMessage());
+                }
+
+            } while (choice != 5);
+
+            con.close();
+            sc.close();
+
+        } catch (ClassNotFoundException e) {
+            System.out.println(
+                "MySQL JDBC Driver not found. Add the JDBC driver.");
+        } catch (SQLException e) {
+            System.out.println(
+                "Database connection failed: " + e.getMessage());
+        }
+    }
+}
+
