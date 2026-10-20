@@ -1,1 +1,212 @@
+index.html
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Online Shopping Website</title>
+</head>
+<body>
+
+    <h1>ONLINE SHOPPING WEBSITE</h1>
+
+    <h2>1. Customer Login</h2>
+    <form action="ShoppingServlet" method="post">
+        <input type="hidden" name="action" value="login">
+
+        Username:
+        <input type="text" name="username" required><br><br>
+
+        Password:
+        <input type="password" name="password" required><br><br>
+
+        <input type="submit" value="Login">
+    </form>
+
+    <hr>
+
+    <h2>2. Product Search</h2>
+    <form action="ShoppingServlet" method="get">
+        Product Name:
+        <input type="text" name="product" required><br><br>
+
+        <input type="submit" value="Search Product">
+    </form>
+
+    <hr>
+
+    <h2>3. Order Placement</h2>
+    <form action="ShoppingServlet" method="post">
+        <input type="hidden" name="action" value="order">
+
+        Customer Name:
+        <input type="text" name="customer" required><br><br>
+
+        Product Name:
+        <input type="text" name="orderProduct" required><br><br>
+
+        Quantity:
+        <input type="number" name="quantity" min="1" required><br><br>
+
+        <input type="submit" value="Place Order">
+    </form>
+
+</body>
+</html>
+
+ShoppingServlet.java
+
+
+import java.io.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+
+public class ShoppingServlet extends HttpServlet {
+
+    public void init() throws ServletException {
+        System.out.println("Servlet Initialized");
+    }
+
+    public void service(HttpServletRequest request,
+                        HttpServletResponse response)
+                        throws ServletException, IOException {
+
+        super.service(request, response);
+    }
+
+    public void doGet(HttpServletRequest request,
+                      HttpServletResponse response)
+                      throws ServletException, IOException {
+
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+
+        String product = request.getParameter("product");
+
+        out.println("<html><body>");
+        out.println("<h2>Product Search Result</h2>");
+
+        if (product == null || product.trim().isEmpty()) {
+            out.println("Please enter a product name.");
+        } else if (product.equalsIgnoreCase("Laptop")) {
+            out.println("Product: Laptop<br>");
+            out.println("Price: Rs. 50000");
+        } else if (product.equalsIgnoreCase("Mobile")) {
+            out.println("Product: Mobile<br>");
+            out.println("Price: Rs. 20000");
+        } else if (product.equalsIgnoreCase("Headphones")) {
+            out.println("Product: Headphones<br>");
+            out.println("Price: Rs. 1500");
+        } else {
+            out.println("Product not found.");
+        }
+
+        out.println("<br><br><a href='index.html'>Go Back</a>");
+        out.println("</body></html>");
+    }
+
+    public void doPost(HttpServletRequest request,
+                       HttpServletResponse response)
+                       throws ServletException, IOException {
+
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+
+        String action = request.getParameter("action");
+
+        out.println("<html><body>");
+
+        if ("login".equals(action)) {
+
+            String username = request.getParameter("username");
+            String password = request.getParameter("password");
+
+            if ("admin".equals(username) &&
+                "1234".equals(password)) {
+
+                out.println("<h2>Login Successful.</h2>");
+            } else {
+                out.println("<h2>Invalid Username or Password.</h2>");
+            }
+
+        } else if ("order".equals(action)) {
+
+            String customer = request.getParameter("customer");
+            String product = request.getParameter("orderProduct");
+            String quantityText = request.getParameter("quantity");
+
+            try {
+                int quantity = Integer.parseInt(quantityText);
+
+                if (customer == null || customer.trim().isEmpty()
+                    || product == null || product.trim().isEmpty()
+                    || quantity <= 0) {
+
+                    out.println("Invalid order details.");
+
+                } else if (!product.equalsIgnoreCase("Laptop")
+                        && !product.equalsIgnoreCase("Mobile")
+                        && !product.equalsIgnoreCase("Headphones")) {
+
+                    out.println("Product not found.");
+
+                } else {
+                    out.println("<h2>Order placed successfully.</h2>");
+                    out.println("Customer: " + customer + "<br>");
+                    out.println("Product: " + product + "<br>");
+                    out.println("Quantity: " + quantity);
+                }
+
+            } catch (NumberFormatException e) {
+                out.println("Please enter a valid quantity.");
+            }
+
+        } else {
+            out.println("Invalid request.");
+        }
+
+        out.println("<br><br><a href='index.html'>Go Back</a>");
+        out.println("</body></html>");
+    }
+
+    public void destroy() {
+        System.out.println("Servlet Destroyed");
+    }
+}
+
+. web.xml
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         version="5.0">
+
+    <servlet>
+        <servlet-name>ShoppingServlet</servlet-name>
+        <servlet-class>ShoppingServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ShoppingServlet</servlet-name>
+        <url-pattern>/ShoppingServlet</url-pattern>
+    </servlet-mapping>
+
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+
+</web-app>
+
+
+OnlineShopping/
+|
+|-- index.html
+|
+|-- WEB-INF/
+    |
+    |-- web.xml
+    |
+    |-- classes/
+        |
+        |-- ShoppingServlet.class
 
